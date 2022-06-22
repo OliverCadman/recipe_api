@@ -59,7 +59,7 @@ EXPOSE 8000
 #   2. If we didn't specify the user, then the only user that would be available
 #      inside the alpine image would be the root user. 
 
-ARG DEV=false
+ARG DEV=true
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update --no-cache postgresql-client && \
