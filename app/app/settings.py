@@ -41,9 +41,12 @@ INSTALLED_APPS = [
 
     # Custom Apps
     'core',
+    'user',
+    'recipe',
 
     # Django REST Framework
     'rest_framework',
+    'rest_framework.authtoken',
     # Auto Schema Generation
     'drf_spectacular'
 ]

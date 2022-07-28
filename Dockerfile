@@ -85,6 +85,8 @@ RUN python -m venv /py && \
 # run.
 ENV PATH="/py/bin:$PATH"
 
+ENV PYTHONPATH "${PYTHONPATH}:/app/"
+
 # Switch to the newly created user. NO FULL ROOT PRIVILEGES.
 USER django-user
 
