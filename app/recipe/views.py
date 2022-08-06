@@ -93,9 +93,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['POST'], detail=False,
+            permission_classes=[IsAuthenticated],
             url_path='delete-all', url_name='delete_all')
     def delete_all(self, request):
-        Recipe.objects.all().delete()
+        """Delete all recipe objects in database."""
+        Recipe.objects.filter(user=self.request.user).delete()
         return Response(status.HTTP_200_OK)
 
 

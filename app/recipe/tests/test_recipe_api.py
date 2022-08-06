@@ -598,8 +598,17 @@ class ImageUploadTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_all_recipes(self):
-        """Test deleting of all recipes in database."""
+        """Test deleting of all recipes for a given user in database."""
 
+        other_user = create_user(
+            email="exampleuser@example.com",
+            password="testpass123"
+        )
+
+        # Should leave one recipe left in the database.
+        create_recipe(user=other_user, title='Beef Bourgignon')
+
+        # These recipes will be deleted.
         create_recipe(user=self.user, title='Eggs Benedict')
         create_recipe(user=self.user, title='Devilled Eggs')
         create_recipe(user=self.user, title='Paella')
@@ -607,4 +616,4 @@ class ImageUploadTests(TestCase):
         res = self.client.post(DELETE_RECIPES_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(Recipe.objects.all()), 0)
+        self.assertEqual(len(Recipe.objects.all()), 1)
