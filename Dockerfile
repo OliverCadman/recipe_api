@@ -31,13 +31,13 @@ COPY ./app /app
 # The WORKDIR is the working directory.
 # This is the default directory where all commands will be run from
 # when running commands on our docker image.
-# We're setting it to the location of where are Django project
+# We're setting it to the location of where our Django project
 # is going to be synced to, so that when we run the commands,
 # we don't have to specify the full path of the Django management commands.
 # It will automatically run from /app directory.
 WORKDIR /app
 
-# EXPOSE exposes a specified port from our container to out
+# EXPOSE exposes a specified port from our container to our
 # machine when we run a container. It allows us to access that port
 # on the container that's running on our image, and allows us 
 # to connect to the Django development server,
@@ -62,9 +62,9 @@ EXPOSE 8000
 ARG DEV=false
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache postgresql-client jpeg-dev && \
     apk add --update --no-cache --virtual .tmp-build-deps \
-        build-base postgresql-dev musl-dev && \
+        build-base postgresql-dev musl-dev zlib zlib-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ $DEV = "true" ]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt; \
@@ -74,7 +74,11 @@ RUN python -m venv /py && \
     adduser \
         --disabled-password \
         --no-create-home \
-        django-user
+        django-user && \
+    mkdir -p /vol/web/media && \
+    mkdir -p /vol/web/static && \
+    chown -R django-user:django-user /vol && \
+    chmod -R 775 /vol
 
 # Updates the environment variable inside our image.
 # We're updating the PATH environemtn variable.
