@@ -27,6 +27,7 @@ from recipe.serializers import (
 
 
 RECIPES_URL = reverse('recipe:recipe-list')
+DELETE_RECIPES_URL = reverse('recipe:recipe-delete_all')
 
 
 def detail_url(recipe_id):
@@ -595,3 +596,15 @@ class ImageUploadTests(TestCase):
 
         res = self.client.post(url, payload, format='multipart')
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_all_recipes(self):
+        """Test deleting of all recipes in database."""
+
+        create_recipe(user=self.user, title='Eggs Benedict')
+        create_recipe(user=self.user, title='Devilled Eggs')
+        create_recipe(user=self.user, title='Paella')
+
+        res = self.client.post(DELETE_RECIPES_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(Recipe.objects.all()), 0)

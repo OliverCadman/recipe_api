@@ -92,6 +92,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=['POST'], detail=False,
+            url_path='delete-all', url_name='delete_all')
+    def delete_all(self, request):
+        Recipe.objects.all().delete()
+        return Response(status.HTTP_200_OK)
+
 
 @extend_schema_view(
     list=extend_schema(
